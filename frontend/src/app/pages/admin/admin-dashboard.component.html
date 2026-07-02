@@ -1,0 +1,81 @@
+<div class="loading-spinner" *ngIf="isLoading" style="display:flex;justify-content:center;align-items:center;height:50vh"><p style="color:var(--text-light);font-size:16px">Loading dashboard...</p></div>
+<ng-container *ngIf="!isLoading">
+<!-- Stats Row -->
+<div class="stats-row">
+  <div class="stat-card" *ngFor="let s of stats">
+    <div class="stat-card-icon" [style.background]="s.iconBg">
+      <span class="material-icons" [style.color]="s.iconColor">{{s.icon}}</span>
+    </div>
+    <div>
+      <span class="stat-label">{{s.label}}</span>
+      <div class="stat-value">{{s.value}}</div>
+      <div class="stat-change" [class.positive]="s.positive" [class.negative]="!s.positive">
+        <span class="material-icons">{{s.positive ? 'trending_up' : 'trending_down'}}</span> {{s.change}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="charts-row">
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3>User Registrations</h3>
+      <div class="chart-legend">
+        <span><span class="dot" style="background:#1B2A4A"></span> Students</span>
+        <span><span class="dot" style="background:#E63946"></span> Alumni</span>
+        <span><span class="dot" style="background:#2EC4B6"></span> Companies</span>
+      </div>
+    </div>
+    <div class="bar-chart">
+      <div class="bar-group" *ngFor="let d of chartData">
+        <div class="bars">
+          <div class="bar students" [style.height.px]="d.students"></div>
+          <div class="bar alumni" [style.height.px]="d.alumni"></div>
+          <div class="bar companies" [style.height.px]="d.companies"></div>
+        </div>
+        <span class="bar-label">{{d.month}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-header"><h3>Platform Metrics</h3></div>
+    <div class="activity-metrics">
+      <div class="metric" *ngFor="let m of activityMetrics">
+        <div class="metric-header"><span>{{m.label}}</span><strong>{{m.value}}%</strong></div>
+        <div class="metric-bar"><div class="metric-fill" [style.width.%]="m.value" [style.background]="m.color"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tables Row -->
+<div class="tables-row">
+  <div class="table-card">
+    <div class="table-header"><h3>Recent Users</h3><button class="view-all">View All</button></div>
+    <div class="table-content">
+      <div class="table-row header-row"><span>User</span><span>Role</span><span>Joined</span><span>Status</span></div>
+      <div class="table-row" *ngFor="let u of recentUsers">
+        <div class="user-cell">
+          <div class="table-avatar" [style.background]="u.color">{{u.initials}}</div>
+          <div><strong>{{u.name}}</strong><small>{{u.email}}</small></div>
+        </div>
+        <span class="role-badge" [ngClass]="'role-' + u.role">{{u.role}}</span>
+        <span class="date-cell">{{u.date}}</span>
+        <span class="status-badge active">Active</span>
+      </div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-header"><h3>Top Opportunities</h3><button class="view-all">View All</button></div>
+    <div class="table-content">
+      <div class="table-row header-row"><span>Opportunity</span><span>Type</span><span>Applications</span></div>
+      <div class="table-row" *ngFor="let o of recentOpportunities" style="grid-template-columns: 2fr 1fr 1fr">
+        <div class="opp-cell"><strong>{{o.title}}</strong><small>{{o.company}}</small></div>
+        <span class="type-badge" [ngClass]="'type-' + o.type">{{o.type}}</span>
+        <div class="apps-cell"><strong>{{o.apps}}</strong><div class="mini-bar"><div class="mini-fill" [style.width.%]="(o.apps / o.maxApps) * 100"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-container>

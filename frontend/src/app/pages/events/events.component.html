@@ -1,0 +1,147 @@
+<div class="loading-spinner" *ngIf="isLoading" style="display:flex;justify-content:center;align-items:center;height:50vh"><p style="color:var(--text-light);font-size:16px">Loading events...</p></div>
+<ng-container *ngIf="!isLoading">
+<div class="page-header">
+  <div>
+    <h2>Events</h2>
+    <p>Discover conferences, workshops, career fairs, and webinars</p>
+  </div>
+  <button class="create-btn" (click)="openCreateModal()"><span class="material-icons">add</span> Create Event</button>
+</div>
+
+<!-- Featured Event -->
+<div class="featured-event" *ngIf="featuredEvent">
+  <div class="featured-content">
+    <span class="featured-badge">Featured Event</span>
+    <h2>{{featuredEvent.title}}</h2>
+    <p>{{featuredEvent.description}}</p>
+    <div class="featured-meta">
+      <span><span class="material-icons">calendar_today</span> {{featuredEvent.date}}</span>
+      <span><span class="material-icons">schedule</span> {{featuredEvent.time}}</span>
+      <span><span class="material-icons">location_on</span> {{featuredEvent.location}}</span>
+      <span><span class="material-icons">people</span> {{featuredEvent.attendees}} registered</span>
+    </div>
+    <button class="register-btn" *ngIf="!featuredEvent.isRegistered" (click)="registerForFeatured()">
+      <span class="material-icons">event_available</span> Register Now
+    </button>
+    <button class="register-btn registered" *ngIf="featuredEvent.isRegistered" (click)="unregisterFromFeatured()">
+      <span class="material-icons">check_circle</span> Registered
+    </button>
+  </div>
+  <div class="calendar-visual">
+    <div class="cal-month">{{featuredEvent.month}}</div>
+    <div class="cal-day">{{featuredEvent.day}}</div>
+    <div class="cal-year">{{featuredEvent.year}}</div>
+  </div>
+</div>
+
+<!-- No Featured Placeholder -->
+<div class="no-events" *ngIf="!featuredEvent && events.length === 0">
+  <span class="material-icons" style="font-size:48px;color:var(--text-lighter)">event_busy</span>
+  <h3>No events yet</h3>
+  <p>Be the first to create an event for the ESPRIT community!</p>
+  <button class="create-btn" (click)="openCreateModal()"><span class="material-icons">add</span> Create Event</button>
+</div>
+
+<!-- Filters -->
+<div class="filter-chips">
+  <button class="chip" *ngFor="let t of types" [class.active]="selectedType === t.value" (click)="selectedType = t.value">
+    <span class="material-icons">{{t.icon}}</span> {{t.label}}
+  </button>
+</div>
+
+<!-- Events Grid -->
+<div class="events-grid">
+  <div class="event-card" *ngFor="let event of filteredEvents">
+    <div class="event-card-header" [style.background]="event.bg">
+      <div class="event-date-badge">
+        <span class="month">{{event.month}}</span>
+        <span class="day">{{event.day}}</span>
+      </div>
+      <span class="event-type-badge">{{event.type.replace('_', ' ')}}</span>
+    </div>
+    <div class="event-card-body">
+      <h3>{{event.title}}</h3>
+      <p class="event-desc">{{event.description}}</p>
+      <div class="event-details">
+        <span><span class="material-icons">schedule</span> {{event.time}}</span>
+        <span><span class="material-icons">location_on</span> {{event.location}}</span>
+      </div>
+      <div class="event-footer">
+        <div class="event-capacity">
+          <div class="capacity-bar"><div class="capacity-fill" [style.width.%]="(event.registered / event.capacity) * 100"></div></div>
+          <small>{{event.registered}}/{{event.capacity}} spots filled</small>
+        </div>
+        <button class="join-btn" [class.online]="event.online" [class.registered]="event.isRegistered" (click)="toggleEventRegistration(event)">
+          <span class="material-icons">{{event.isRegistered ? 'check_circle' : (event.online ? 'videocam' : 'event_available')}}</span>
+          {{event.isRegistered ? 'Registered' : (event.online ? 'Join Online' : 'Register')}}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-container>
+
+<!-- Create Event Modal -->
+<div class="modal-overlay" *ngIf="showCreateModal" (click)="closeCreateModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3><span class="material-icons">event</span> Create New Event</h3>
+      <button class="modal-close" (click)="closeCreateModal()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Event Title *</label>
+        <input type="text" [(ngModel)]="newEvent.title" placeholder="e.g. ESPRIT Tech Summit 2026">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="newEvent.description" rows="3" placeholder="Describe your event..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Event Type *</label>
+          <select [(ngModel)]="newEvent.event_type">
+            <option *ngFor="let t of eventTypes" [value]="t.value">{{t.label}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Max Participants</label>
+          <input type="number" [(ngModel)]="newEvent.max_participants" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" [(ngModel)]="newEvent.date">
+        </div>
+        <div class="form-group">
+          <label>Time *</label>
+          <input type="time" [(ngModel)]="newEvent.time">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Location *</label>
+        <input type="text" [(ngModel)]="newEvent.location" placeholder="e.g. ESPRIT Campus, El Ghazala">
+      </div>
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="newEvent.is_online">
+          <span>This is an online event</span>
+        </label>
+      </div>
+      <div class="form-group" *ngIf="newEvent.is_online">
+        <label>Meeting Link</label>
+        <input type="url" [(ngModel)]="newEvent.meeting_link" placeholder="https://meet.google.com/...">
+      </div>
+      <p class="form-error" *ngIf="createError">{{createError}}</p>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="closeCreateModal()">Cancel</button>
+      <button class="submit-btn" (click)="submitEvent()" [disabled]="isCreating">
+        <span class="material-icons" *ngIf="!isCreating">add</span>
+        <span *ngIf="isCreating">Creating...</span>
+        <span *ngIf="!isCreating">Create Event</span>
+      </button>
+    </div>
+  </div>
+</div>

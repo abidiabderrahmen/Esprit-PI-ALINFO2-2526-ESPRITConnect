@@ -1,0 +1,252 @@
+<!-- NAVBAR -->
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-inner">
+    <a routerLink="/" class="logo">
+      <img src="assets/esprit-logo.svg" alt="ESPRIT" class="logo-img">
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#stats">Impact</a>
+      <a href="#testimonials">Testimonials</a>
+    </div>
+    <div class="nav-actions">
+      <a routerLink="/login" class="btn-ghost">Sign In</a>
+      <a routerLink="/register" class="btn-primary-nav">Get Started <span class="material-icons">arrow_forward</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <div class="hero-grid-pattern"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="badge-row">
+        <span class="hero-badge"><span class="badge-dot"></span> ESPRIT Alumni Network</span>
+      </div>
+      <h1>Connect. Grow.<br><span class="gradient-text">Succeed Together.</span></h1>
+      <p class="hero-desc">The premier platform connecting ESPRIT students, alumni, and companies. Build your career, find mentors, and unlock exclusive opportunities.</p>
+      <div class="hero-buttons">
+        <a routerLink="/register" class="btn-primary">
+          Join the Network <span class="material-icons">arrow_forward</span>
+        </a>
+        <a href="#features" class="btn-secondary">
+          <span class="material-icons">play_circle</span> See How It Works
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="avatar-stack">
+          <div class="stack-av" style="background:#4338CA">ST</div>
+          <div class="stack-av" style="background:#E63946">NA</div>
+          <div class="stack-av" style="background:#059669">YG</div>
+          <div class="stack-av" style="background:#EA580C">AC</div>
+          <div class="stack-av plus">+2k</div>
+        </div>
+        <span>Joined by <strong>2,500+</strong> ESPRIT members</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual">
+        <div class="visual-card card-float-1">
+          <div class="vc-icon" style="background:#FFF1F2"><span class="material-icons" style="color:#E63946">work</span></div>
+          <div class="vc-text">
+            <strong>New Opportunity</strong>
+            <span>Full Stack Developer - Vermeg</span>
+          </div>
+          <div class="vc-badge green">New</div>
+        </div>
+        <div class="visual-card card-float-2">
+          <div class="vc-icon" style="background:#FEF9C3"><span class="material-icons" style="color:#CA8A04">emoji_events</span></div>
+          <div class="vc-text">
+            <strong>Achievement Unlocked</strong>
+            <span>Sarah promoted to Senior Eng.</span>
+          </div>
+        </div>
+        <div class="visual-card card-float-3">
+          <div class="vc-icon" style="background:#ECFDF5"><span class="material-icons" style="color:#059669">people</span></div>
+          <div class="vc-text">
+            <strong>New Connection</strong>
+            <span>Karim Belaid, CTO at InstaDeep</span>
+          </div>
+        </div>
+        <div class="visual-stats-card">
+          <div class="vs-row"><span>Members</span><strong>2,547</strong></div>
+          <div class="vs-row"><span>Jobs Posted</span><strong>523</strong></div>
+          <div class="vs-row"><span>Hired</span><strong>1,890</strong></div>
+          <div class="vs-bar"><div class="vs-fill"></div></div>
+          <small>95% employment rate</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS / PARTNERS -->
+<section class="partners">
+  <div class="section-inner">
+    <p class="partners-label">Trusted by companies that hire ESPRIT graduates</p>
+    <div class="partners-row">
+      <span *ngFor="let p of partners" class="partner-name">{{p}}</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="label">PLATFORM FEATURES</span>
+      <h2>Everything You Need to <span class="gradient-text">Succeed</span></h2>
+      <p>A comprehensive platform designed for the ESPRIT community's growth and success.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let f of features; let i = index" [style.animation-delay]="i * 0.08 + 's'">
+        <div class="feature-icon-wrap" [style.background]="f.bg">
+          <span class="material-icons" [style.color]="f.color">{{f.icon}}</span>
+        </div>
+        <h3>{{f.title}}</h3>
+        <p>{{f.desc}}</p>
+        <a class="feature-link">Learn more <span class="material-icons">arrow_forward</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-section" id="stats">
+  <div class="section-inner">
+    <div class="stats-container">
+      <div class="stats-left">
+        <span class="label label-light">OUR IMPACT</span>
+        <h2>Building the Strongest Alumni Network in Tunisia</h2>
+        <p>Since 2020, ESPRIT CONNECT has been the bridge between talent and opportunity, creating lasting professional relationships.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let s of stats">
+          <span class="material-icons" [style.color]="s.color">{{s.icon}}</span>
+          <strong>{{s.value}}</strong>
+          <span class="stat-label">{{s.label}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-section">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="label">HOW IT WORKS</span>
+      <h2>Get Started in <span class="gradient-text">3 Simple Steps</span></h2>
+    </div>
+    <div class="steps-row">
+      <div class="step-card" *ngFor="let step of steps; let i = index">
+        <div class="step-num-wrap">
+          <span class="step-num">{{i + 1}}</span>
+          <div class="step-line" *ngIf="i < 2"></div>
+        </div>
+        <div class="step-icon-wrap"><span class="material-icons">{{step.icon}}</span></div>
+        <h3>{{step.title}}</h3>
+        <p>{{step.desc}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="label">TESTIMONIALS</span>
+      <h2>Loved by the <span class="gradient-text">ESPRIT Community</span></h2>
+      <p>Hear from students, alumni, and companies who use ESPRIT CONNECT daily.</p>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let t of testimonials">
+        <div class="t-stars">
+          <span class="material-icons" *ngFor="let x of [1,2,3,4,5]">star</span>
+        </div>
+        <p class="t-text">"{{t.text}}"</p>
+        <div class="t-author">
+          <div class="t-avatar" [style.background]="t.color">{{t.initials}}</div>
+          <div>
+            <strong>{{t.name}}</strong>
+            <span>{{t.role}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner">
+    <div class="cta-card">
+      <div class="cta-bg-effects">
+        <div class="cta-orb cta-orb-1"></div>
+        <div class="cta-orb cta-orb-2"></div>
+      </div>
+      <div class="cta-content">
+        <img src="assets/esprit-logo-white.svg" alt="ESPRIT" class="cta-logo">
+        <h2>Ready to Shape Your Future?</h2>
+        <p>Join thousands of ESPRIT graduates who are building extraordinary careers through our platform.</p>
+        <div class="cta-btns">
+          <a routerLink="/register" class="btn-cta-primary">Create Free Account <span class="material-icons">arrow_forward</span></a>
+          <a routerLink="/login" class="btn-cta-secondary">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="section-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="assets/esprit-logo-white.svg" alt="ESPRIT" class="footer-logo">
+        <p>The premier alumni networking platform connecting the ESPRIT community worldwide.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn"><span class="material-icons">language</span></a>
+          <a href="#" class="social-btn"><span class="material-icons">mail</span></a>
+          <a href="#" class="social-btn"><span class="material-icons">phone</span></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#features">Features</a>
+        <a href="#stats">Impact</a>
+        <a href="#testimonials">Testimonials</a>
+        <a routerLink="/register">Sign Up</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Help Center</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">contact&#64;esprit.tn</a>
+        <a href="#">(+216) 70 250 000</a>
+        <a href="#">El Ghazala, Tunis</a>
+        <a href="#">esprit.tn</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&#169; 2026 ESPRIT CONNECT. All rights reserved.</span>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,73 @@
+<div class="auth-wrapper">
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <img src="assets/esprit-logo-white.svg" alt="ESPRIT" class="auth-logo">
+      <h1>Join the Community</h1>
+      <p>Create your account and unlock a world of professional opportunities with the ESPRIT network.</p>
+      <div class="features-list">
+        <div><span class="material-icons">check_circle</span> Students, alumni &amp; companies</div>
+        <div><span class="material-icons">check_circle</span> Career growth tools</div>
+        <div><span class="material-icons">check_circle</span> AI-powered recommendations</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="form-box">
+      <h2>Create Account</h2>
+      <p class="subtitle">Step {{currentStep}} of 3</p>
+
+      <div class="step-bar">
+        <div class="step-fill" [style.width.%]="(currentStep / 3) * 100"></div>
+      </div>
+
+      <form (ngSubmit)="currentStep < 3 ? nextStep() : onRegister()">
+        <!-- Step 1 -->
+        <div *ngIf="currentStep === 1">
+          <p class="step-title">I am a...</p>
+          <div class="role-options">
+            <div class="role-opt" *ngFor="let r of roles" [class.selected]="formData.role === r.value" (click)="formData.role = r.value">
+              <span class="material-icons" [style.color]="r.color">{{r.icon}}</span>
+              <strong>{{r.label}}</strong>
+              <small>{{r.desc}}</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div *ngIf="currentStep === 2">
+          <div class="row">
+            <div class="field"><label>First Name</label><div class="input-box"><input type="text" [(ngModel)]="formData.first_name" name="fn" placeholder="First name" required></div></div>
+            <div class="field"><label>Last Name</label><div class="input-box"><input type="text" [(ngModel)]="formData.last_name" name="ln" placeholder="Last name" required></div></div>
+          </div>
+          <div class="field"><label>Username</label><div class="input-box"><input type="text" [(ngModel)]="formData.username" name="un" placeholder="Choose a username" required></div></div>
+          <div class="field"><label>Email</label><div class="input-box"><input type="email" [(ngModel)]="formData.email" name="em" placeholder="your.email&#64;esprit.tn" required></div></div>
+        </div>
+
+        <!-- Step 3 -->
+        <div *ngIf="currentStep === 3">
+          <div class="field"><label>Password</label>
+            <div class="input-box">
+              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="formData.password" name="pw" placeholder="Min 8 characters" required>
+              <span class="material-icons toggle" (click)="showPassword = !showPassword">{{showPassword ? 'visibility_off' : 'visibility'}}</span>
+            </div>
+          </div>
+          <div class="field"><label>Confirm Password</label>
+            <div class="input-box"><input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="formData.password_confirm" name="pwc" placeholder="Repeat password" required></div>
+          </div>
+          <div class="strength">
+            <div class="strength-track"><div class="strength-fill" [style.width.%]="passwordStrength" [style.background]="strengthColor"></div></div>
+            <small [style.color]="strengthColor">{{strengthLabel}}</small>
+          </div>
+        </div>
+
+        <div class="form-btns">
+          <button type="button" class="back-btn" *ngIf="currentStep > 1" (click)="currentStep = currentStep - 1">Back</button>
+          <button type="submit" class="submit-btn" [disabled]="isLoading">
+            {{currentStep < 3 ? 'Continue' : (isLoading ? 'Creating...' : 'Create Account')}}
+          </button>
+        </div>
+      </form>
+      <p class="switch-text">Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>

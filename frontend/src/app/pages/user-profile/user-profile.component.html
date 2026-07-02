@@ -1,0 +1,91 @@
+<div class="user-profile-page" *ngIf="!isLoading && user">
+  <!-- Header -->
+  <div class="up-header">
+    <div class="up-banner"></div>
+    <div class="up-header-content">
+      <div class="up-avatar">{{initials}}</div>
+      <div class="up-info">
+        <h1>{{fullName}}</h1>
+        <p class="up-role" *ngIf="isConnected">{{user.current_position || ''}} <span *ngIf="user.company_name">at {{user.company_name}}</span></p>
+        <p class="up-role" *ngIf="!isConnected">{{user.role || 'Member'}}</p>
+        <div class="up-meta" *ngIf="isConnected">
+          <span *ngIf="user.location"><span class="material-icons">location_on</span> {{user.location}}</span>
+          <span *ngIf="user.graduation_year"><span class="material-icons">school</span> Class of {{user.graduation_year}}</span>
+        </div>
+      </div>
+      <div class="up-actions">
+        <button class="connect-action-btn" *ngIf="connectionStatus === 'none'" (click)="sendConnection()">
+          <span class="material-icons">person_add</span> Connect
+        </button>
+        <button class="connect-action-btn pending" *ngIf="connectionStatus === 'pending'" disabled>
+          <span class="material-icons">hourglass_top</span> Pending
+        </button>
+        <button class="connect-action-btn connected" *ngIf="connectionStatus === 'accepted'">
+          <span class="material-icons">check_circle</span> Connected
+        </button>
+        <button class="disconnect-btn" *ngIf="connectionStatus === 'accepted'" (click)="removeConnection()">
+          <span class="material-icons">person_remove</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connected: full profile -->
+  <div class="up-body" *ngIf="isConnected">
+    <div class="up-main">
+      <div class="up-section" *ngIf="user.bio">
+        <h3><span class="material-icons">person</span> About</h3>
+        <p>{{user.bio}}</p>
+      </div>
+      <div class="up-section" *ngIf="skills.length > 0">
+        <h3><span class="material-icons">code</span> Skills</h3>
+        <div class="skills-list">
+          <span class="skill-chip" *ngFor="let s of skills">{{s}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="up-sidebar">
+      <div class="up-card">
+        <h4>Contact Information</h4>
+        <div class="contact-row"><span class="material-icons">email</span> {{user.email}}</div>
+        <div class="contact-row" *ngIf="user.phone"><span class="material-icons">phone</span> {{user.phone}}</div>
+        <div class="contact-row" *ngIf="user.linkedin_url"><span class="material-icons">link</span> <a [href]="user.linkedin_url" target="_blank">LinkedIn</a></div>
+        <div class="contact-row" *ngIf="user.github_url"><span class="material-icons">code</span> <a [href]="user.github_url" target="_blank">GitHub</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not connected: limited view -->
+  <div class="up-body" *ngIf="!isConnected">
+    <div class="up-private-card" (click)="tryViewDetails()">
+      <span class="material-icons lock-icon">lock</span>
+      <h3>This is a private account</h3>
+      <p>Connect with <strong>{{fullName}}</strong> to see their full profile, skills, contact information, and more.</p>
+      <button class="connect-action-btn" *ngIf="connectionStatus === 'none'" (click)="sendConnection(); $event.stopPropagation()">
+        <span class="material-icons">person_add</span> Send Connection Request
+      </button>
+      <button class="connect-action-btn pending" *ngIf="connectionStatus === 'pending'" disabled>
+        <span class="material-icons">hourglass_top</span> Request Pending
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="isLoading">
+  <p>Loading profile...</p>
+</div>
+
+<!-- Private Account Popup -->
+<div class="popup-overlay" *ngIf="showPrivatePopup" (click)="closePopup()">
+  <div class="popup-card" (click)="$event.stopPropagation()">
+    <span class="material-icons popup-icon">lock</span>
+    <h3>Private Account</h3>
+    <p>You need to be connected with <strong>{{fullName}}</strong> to view their full profile details.</p>
+    <div class="popup-actions">
+      <button class="connect-action-btn" *ngIf="connectionStatus === 'none'" (click)="sendConnection(); closePopup()">
+        <span class="material-icons">person_add</span> Connect
+      </button>
+      <button class="close-popup-btn" (click)="closePopup()">Close</button>
+    </div>
+  </div>
+</div>

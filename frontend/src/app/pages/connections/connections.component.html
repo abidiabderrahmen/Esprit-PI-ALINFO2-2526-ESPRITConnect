@@ -1,0 +1,65 @@
+<div class="connections-page">
+  <div class="page-header">
+    <h2><span class="material-icons">people</span> My Connections</h2>
+    <div class="tab-bar">
+      <button [class.active]="activeTab === 'connections'" (click)="activeTab = 'connections'">
+        <span class="material-icons">group</span> Connections ({{connections.length}})
+      </button>
+      <button [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'">
+        <span class="material-icons">notifications_active</span> Pending ({{pendingRequests.length}})
+      </button>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="isLoading">Loading...</div>
+
+  <!-- Connections Tab -->
+  <div class="connections-grid" *ngIf="activeTab === 'connections' && !isLoading">
+    <div class="empty-state" *ngIf="connections.length === 0">
+      <span class="material-icons">person_add</span>
+      <h3>No connections yet</h3>
+      <p>Start connecting with other ESPRIT members from the feed or directory!</p>
+    </div>
+    <div class="connection-card" *ngFor="let c of connections">
+      <div class="card-avatar" [style.background]="c.color">{{c.initials}}</div>
+      <div class="card-info">
+        <strong>{{c.name}}</strong>
+        <small>{{c.role}}</small>
+        <span class="connected-since">Connected {{getRelativeTime(c.connectedAt)}}</span>
+      </div>
+      <div class="card-actions">
+        <button class="view-btn" (click)="viewProfile(c.user?.id)">
+          <span class="material-icons">person</span> View Profile
+        </button>
+        <button class="remove-btn" (click)="removeConnection(c)">
+          <span class="material-icons">person_remove</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Tab -->
+  <div class="connections-grid" *ngIf="activeTab === 'pending' && !isLoading">
+    <div class="empty-state" *ngIf="pendingRequests.length === 0">
+      <span class="material-icons">check_circle</span>
+      <h3>No pending requests</h3>
+      <p>You're all caught up!</p>
+    </div>
+    <div class="connection-card pending" *ngFor="let r of pendingRequests">
+      <div class="card-avatar" [style.background]="r.color">{{r.initials}}</div>
+      <div class="card-info">
+        <strong>{{r.name}}</strong>
+        <small>{{r.role}}</small>
+        <span class="connected-since">Sent {{getRelativeTime(r.sentAt)}}</span>
+      </div>
+      <div class="card-actions">
+        <button class="accept-btn" (click)="acceptRequest(r)">
+          <span class="material-icons">check</span> Accept
+        </button>
+        <button class="reject-btn" (click)="rejectRequest(r)">
+          <span class="material-icons">close</span> Decline
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

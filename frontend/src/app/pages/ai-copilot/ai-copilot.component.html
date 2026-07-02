@@ -1,0 +1,192 @@
+<!-- HEADER -->
+<div class="copilot-header">
+  <div class="header-left">
+    <div class="ai-badge"><span class="material-icons">auto_awesome</span> AI-Powered</div>
+    <h1>Career Copilot</h1>
+    <p>Your personal AI career advisor. Everything you need to land your dream job.</p>
+  </div>
+  <div class="header-actions">
+    <a routerLink="/app/ai-cv" class="action-btn primary"><span class="material-icons">description</span> AI CV Review</a>
+    <button class="action-btn secondary"><span class="material-icons">mic</span> Voice Assistant</button>
+  </div>
+</div>
+
+<!-- TOP STATS -->
+<div class="top-row">
+  <!-- Employability Score -->
+  <div class="score-card">
+    <div class="score-ring">
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+        <circle cx="60" cy="60" r="52" fill="none" [attr.stroke]="getScoreColor(employabilityScore)" stroke-width="8"
+          stroke-linecap="round" stroke-dasharray="327" [attr.stroke-dashoffset]="327 - (327 * employabilityScore / 100)"
+          transform="rotate(-90 60 60)" class="score-circle"/>
+      </svg>
+      <div class="score-value">
+        <strong>{{employabilityScore}}</strong>
+        <span>/ 100</span>
+      </div>
+    </div>
+    <div class="score-info">
+      <h3>Employability Score</h3>
+      <p>Based on skills, projects, certifications and market demand</p>
+      <div class="score-breakdown">
+        <div class="sb-item"><span>Skills Match</span><strong>82%</strong></div>
+        <div class="sb-item"><span>Portfolio</span><strong>65%</strong></div>
+        <div class="sb-item"><span>Market Fit</span><strong>88%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="quick-stats">
+    <div class="qs-card">
+      <div class="qs-icon" style="background:#EEF2FF"><span class="material-icons" style="color:#4338CA">work</span></div>
+      <div><strong>12</strong><span>Matching Jobs</span></div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-icon" style="background:#ECFDF5"><span class="material-icons" style="color:#059669">people</span></div>
+      <div><strong>3</strong><span>Mentor Matches</span></div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-icon" style="background:#FFF7ED"><span class="material-icons" style="color:#EA580C">school</span></div>
+      <div><strong>5</strong><span>Skills to Learn</span></div>
+    </div>
+    <div class="qs-card">
+      <div class="qs-icon" style="background:#F3E8FF"><span class="material-icons" style="color:#7C3AED">trending_up</span></div>
+      <div><strong>+12%</strong><span>Score Growth</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- AI CV SCORE MINI -->
+<div class="cv-score-section">
+  <div class="section-title"><span class="material-icons">description</span> AI CV Analysis</div>
+  <div class="cv-scores">
+    <div class="cv-metric" *ngFor="let key of ['ats', 'content', 'format', 'keywords']">
+      <div class="cv-ring-small">
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#E5E7EB" stroke-width="4"/>
+          <circle cx="24" cy="24" r="20" fill="none" [attr.stroke]="getScoreColor(cvScore[key])" stroke-width="4"
+            stroke-linecap="round" stroke-dasharray="126" [attr.stroke-dashoffset]="126 - (126 * cvScore[key] / 100)"
+            transform="rotate(-90 24 24)"/>
+        </svg>
+        <span class="cv-ring-val">{{cvScore[key]}}</span>
+      </div>
+      <span class="cv-metric-label">{{key === 'ats' ? 'ATS Score' : (key | titlecase)}}</span>
+    </div>
+  </div>
+  <a routerLink="/app/ai-cv" class="view-full-btn">View Full CV Analysis <span class="material-icons">arrow_forward</span></a>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main-grid">
+  <!-- Skills Map -->
+  <div class="card skills-card">
+    <div class="card-title"><span class="material-icons">code</span> Skills Radar</div>
+    <div class="skills-bars">
+      <div class="skill-row" *ngFor="let s of animatedSkills">
+        <span class="skill-name">{{s.name}}</span>
+        <div class="skill-track"><div class="skill-fill" [style.width.%]="s.animLevel" [style.background]="getScoreColor(s.animLevel)"></div></div>
+        <span class="skill-pct">{{s.level}}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills Gap -->
+  <div class="card gap-card">
+    <div class="card-title"><span class="material-icons">psychology</span> Skills Gap Analysis</div>
+    <div class="gap-list">
+      <div class="gap-item" *ngFor="let g of skillGaps">
+        <div class="gap-header">
+          <span class="gap-priority" [style.background]="getPriorityColor(g.priority)">{{g.priority}}</span>
+          <strong>{{g.skill}}</strong>
+        </div>
+        <p class="gap-reason">{{g.reason}}</p>
+        <div class="gap-track"><div class="gap-fill" [style.width.%]="g.progress" [style.background]="getPriorityColor(g.priority)"></div></div>
+        <span class="gap-progress">{{g.progress}}% learned</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CAREER ROADMAP -->
+<div class="card roadmap-card">
+  <div class="card-title"><span class="material-icons">route</span> AI Career Roadmap</div>
+  <div class="roadmap">
+    <div class="roadmap-step" *ngFor="let step of careerRoadmap" [class]="step.status">
+      <div class="roadmap-dot">
+        <span class="material-icons" *ngIf="step.status === 'active'">radio_button_checked</span>
+        <span class="material-icons" *ngIf="step.status !== 'active'">radio_button_unchecked</span>
+      </div>
+      <div class="roadmap-content">
+        <span class="roadmap-phase">{{step.phase}}</span>
+        <h4>{{step.title}}</h4>
+        <ul><li *ngFor="let item of step.items">{{item}}</li></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MATCHES ROW -->
+<div class="matches-grid">
+  <!-- Job Matches -->
+  <div class="card">
+    <div class="card-title"><span class="material-icons">work</span> Smart Job Matches</div>
+    <div class="match-list">
+      <div class="match-item" *ngFor="let j of jobMatches">
+        <div class="match-info">
+          <strong>{{j.title}}</strong>
+          <span>{{j.company}} &middot; {{j.salary}}</span>
+        </div>
+        <div class="match-score" [style.color]="getMatchColor(j.match)">
+          <svg viewBox="0 0 36 36" width="40" height="40">
+            <circle cx="18" cy="18" r="15" fill="none" stroke="#E5E7EB" stroke-width="3"/>
+            <circle cx="18" cy="18" r="15" fill="none" [attr.stroke]="getMatchColor(j.match)" stroke-width="3"
+              stroke-linecap="round" stroke-dasharray="94" [attr.stroke-dashoffset]="94 - (94 * j.match / 100)"
+              transform="rotate(-90 18 18)"/>
+          </svg>
+          <span class="match-pct">{{j.match}}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mentor Matches -->
+  <div class="card">
+    <div class="card-title"><span class="material-icons">school</span> AI Mentor Matches</div>
+    <div class="mentor-list">
+      <div class="mentor-item" *ngFor="let m of mentorMatches">
+        <div class="mentor-av" [style.background]="m.color">{{m.initials}}</div>
+        <div class="mentor-info">
+          <strong>{{m.name}}</strong>
+          <span>{{m.role}}</span>
+          <div class="mentor-skills">
+            <span class="mtag" *ngFor="let s of m.skills">{{s}}</span>
+          </div>
+        </div>
+        <div class="match-badge" [style.background]="getMatchColor(m.match)">{{m.match}}%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INTERVIEW READINESS -->
+<div class="card interview-card">
+  <div class="card-title"><span class="material-icons">record_voice_over</span> Interview Readiness</div>
+  <div class="interview-grid">
+    <div class="interview-area" *ngFor="let a of interviewReadiness">
+      <div class="ia-ring">
+        <svg viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#E5E7EB" stroke-width="5"/>
+          <circle cx="40" cy="40" r="34" fill="none" [attr.stroke]="a.color" stroke-width="5"
+            stroke-linecap="round" stroke-dasharray="214" [attr.stroke-dashoffset]="214 - (214 * a.score / 100)"
+            transform="rotate(-90 40 40)"/>
+        </svg>
+        <span class="ia-val">{{a.score}}%</span>
+      </div>
+      <strong>{{a.area}}</strong>
+      <button class="practice-btn">Practice</button>
+    </div>
+  </div>
+</div>

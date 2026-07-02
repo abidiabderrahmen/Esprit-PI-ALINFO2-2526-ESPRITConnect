@@ -1,0 +1,39 @@
+# === Java / Spring Boot ===
+backend-spring/target/
+*.class
+*.jar
+*.war
+*.log
+*.iml
+
+# === Node / Angular ===
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# === Environment & Secrets ===
+.env
+*.env.local
+backend-spring/src/main/resources/application-local.properties
+
+# === Old Django backend (not used) ===
+backend/
+
+# === Python ===
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# === OS ===
+desktop.ini
+ehthumbs.db

@@ -1,0 +1,142 @@
+<div class="loading-spinner" *ngIf="isLoading">
+  <div class="spinner-anim"></div>
+  <p>Finding real jobs matching your skills...</p>
+</div>
+
+<ng-container *ngIf="!isLoading">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2><span class="material-icons header-icon">work</span> Job Finder</h2>
+      <p>Real job listings matched to your skills — powered by 1.4M+ open positions</p>
+    </div>
+    <div class="job-count" *ngIf="filteredJobs.length > 0">
+      <span class="material-icons">auto_awesome</span>
+      {{filteredJobs.length}} jobs found
+    </div>
+  </div>
+
+  <!-- No Skills Warning -->
+  <div class="no-skills-banner" *ngIf="!hasSkills">
+    <span class="material-icons">warning_amber</span>
+    <div>
+      <strong>No skills in your profile!</strong>
+      <p>Add your skills to get personalized job recommendations.</p>
+    </div>
+    <button class="add-skills-btn" (click)="goToProfile()">
+      <span class="material-icons">add</span> Add Skills
+    </button>
+  </div>
+
+  <!-- Skills Banner -->
+  <div class="skills-banner" *ngIf="hasSkills">
+    <div class="skills-banner-left">
+      <span class="material-icons">auto_awesome</span>
+      <span>Matching jobs for:</span>
+    </div>
+    <div class="skills-banner-chips">
+      <span class="skill-tag" *ngFor="let s of userSkills">{{s}}</span>
+    </div>
+    <button class="edit-skills-btn" (click)="goToProfile()">
+      <span class="material-icons">edit</span> Edit
+    </button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input type="text" [(ngModel)]="searchQuery"
+             placeholder="Search jobs (e.g. Flutter developer, Chef, Data Analyst...)"
+             (keyup.enter)="onSearch()">
+    </div>
+    <button class="search-btn" (click)="onSearch()">
+      <span class="material-icons">search</span> Search
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <button class="filter-chip" [class.active]="selectedFilter === 'all'" (click)="setFilter('all')">
+      <span class="material-icons">apps</span> All
+    </button>
+    <button class="filter-chip" [class.active]="selectedFilter === 'entry'" (click)="setFilter('entry')">
+      <span class="material-icons">school</span> Entry / Intern
+    </button>
+    <button class="filter-chip" [class.active]="selectedFilter === 'mid'" (click)="setFilter('mid')">
+      <span class="material-icons">work</span> Mid-Level
+    </button>
+    <button class="filter-chip" [class.active]="selectedFilter === 'senior'" (click)="setFilter('senior')">
+      <span class="material-icons">star</span> Senior+
+    </button>
+  </div>
+
+  <!-- Job Cards -->
+  <div class="jobs-grid" *ngIf="filteredJobs.length > 0">
+    <div class="job-card" *ngFor="let job of filteredJobs" (click)="openJob(job)">
+      <!-- Match Badge -->
+      <div class="match-badge" *ngIf="getSkillMatch(job) > 0">
+        <span class="material-icons">auto_awesome</span>
+        {{getSkillMatch(job)}}% match
+      </div>
+
+      <!-- Card Header -->
+      <div class="job-card-header">
+        <div class="company-avatar">{{getCompanyInitial(job.company)}}</div>
+        <div class="job-card-info">
+          <h3 class="job-title">{{job.title}}</h3>
+          <p class="job-company">
+            <span class="material-icons">business</span> {{job.company}}
+          </p>
+        </div>
+      </div>
+
+      <!-- Meta -->
+      <div class="job-meta">
+        <span class="meta-item" *ngIf="job.location">
+          <span class="material-icons">location_on</span> {{job.location}}
+        </span>
+        <span class="meta-item" *ngIf="job.seniority">
+          <span class="material-icons">trending_up</span> {{getSeniorityLabel(job.seniority)}}
+        </span>
+        <span class="meta-item" *ngIf="job.posted_at">
+          <span class="material-icons">schedule</span> {{getTimeAgo(job.posted_at)}}
+        </span>
+        <span class="meta-item source-badge" *ngIf="job.source">
+          <span class="material-icons">link</span> {{job.source}}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <p class="job-description" *ngIf="job.description">{{job.description}}</p>
+
+      <!-- Skills Tags -->
+      <div class="job-skills" *ngIf="job.skills?.length > 0">
+        <span class="job-skill-tag" *ngFor="let skill of job.skills.slice(0, 6)"
+              [class.matched]="isSkillMatched(skill)">
+          {{skill}}
+        </span>
+        <span class="more-skills" *ngIf="job.skills.length > 6">+{{job.skills.length - 6}}</span>
+      </div>
+
+      <!-- Action -->
+      <div class="job-card-footer">
+        <button class="apply-btn" (click)="openJob(job); $event.stopPropagation()">
+          <span class="material-icons">open_in_new</span> View & Apply
+        </button>
+        <span class="matched-query" *ngIf="job.matched_query">
+          matched: {{job.matched_query}}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="filteredJobs.length === 0">
+    <span class="material-icons">search_off</span>
+    <h3>No jobs found</h3>
+    <p *ngIf="selectedFilter !== 'all'">Try changing the filter or search for something else.</p>
+    <p *ngIf="selectedFilter === 'all' && !hasSkills">Add skills to your profile to get job recommendations.</p>
+    <p *ngIf="selectedFilter === 'all' && hasSkills">Try searching for a different keyword.</p>
+  </div>
+</ng-container>

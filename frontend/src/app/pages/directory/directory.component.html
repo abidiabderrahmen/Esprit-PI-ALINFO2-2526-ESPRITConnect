@@ -1,0 +1,49 @@
+<div class="loading-spinner" *ngIf="isLoading" style="display:flex;justify-content:center;align-items:center;height:50vh"><p style="color:var(--text-light);font-size:16px">Loading directory...</p></div>
+<ng-container *ngIf="!isLoading">
+<!-- Filters -->
+<div class="filters-bar">
+  <div class="search-box">
+    <span class="material-icons">search</span>
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search by name, company, skill...">
+  </div>
+  <div class="filter-chips">
+    <button class="chip" *ngFor="let r of roles" [class.active]="selectedRole === r.value" (click)="selectedRole = r.value">
+      <span class="material-icons">{{r.icon}}</span> {{r.label}}
+    </button>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="directory-stats">
+  <div class="stat-pill"><span class="material-icons" style="color:#4338CA">groups</span> <strong>{{statsCount.total}}</strong> <span>Total Members</span></div>
+  <div class="stat-pill"><span class="material-icons" style="color:#EA580C">people</span> <strong>{{statsCount.alumni}}</strong> <span>Alumni</span></div>
+  <div class="stat-pill"><span class="material-icons" style="color:#059669">school</span> <strong>{{statsCount.students}}</strong> <span>Students</span></div>
+  <div class="stat-pill"><span class="material-icons" style="color:#E63946">business</span> <strong>{{statsCount.companies}}</strong> <span>Companies</span></div>
+</div>
+
+<!-- Users Grid -->
+<div class="users-grid">
+  <div class="user-card" *ngFor="let u of filteredUsers">
+    <div class="user-card-header" [style.background]="u.bg">
+      <span class="user-role-badge">{{u.role}}</span>
+      <span class="mentor-badge" *ngIf="u.mentor"><span class="material-icons">workspace_premium</span> Mentor</span>
+    </div>
+    <div class="user-card-body">
+      <div class="user-card-avatar" [style.background]="u.color">{{u.initials}}</div>
+      <h3>{{u.name}}</h3>
+      <p class="user-position">{{u.position}}</p>
+      <p class="user-company"><span class="material-icons">business</span> {{u.company}}</p>
+      <p class="user-location"><span class="material-icons">location_on</span> {{u.location}}</p>
+      <div class="user-skills">
+        <span class="skill-tag" *ngFor="let s of u.skills">{{s}}</span>
+      </div>
+      <div class="user-card-actions">
+        <button class="view-btn" (click)="viewProfile(u.id)"><span class="material-icons">person</span> View Profile</button>
+        <button class="connect-btn" *ngIf="u.id !== currentUser?.id && getConnStatus(u.id) === 'none'" (click)="sendConnection(u.id)"><span class="material-icons">person_add</span></button>
+        <button class="connect-btn pending" *ngIf="getConnStatus(u.id) === 'pending'" disabled title="Pending"><span class="material-icons">hourglass_top</span></button>
+        <button class="connect-btn connected" *ngIf="getConnStatus(u.id) === 'accepted'" disabled title="Connected"><span class="material-icons">check_circle</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+</ng-container>

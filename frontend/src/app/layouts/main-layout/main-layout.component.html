@@ -1,0 +1,105 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <a routerLink="/" class="sidebar-logo"><img src="assets/esprit-logo-white.svg" alt="ESPRIT" class="s-logo-img"></a>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">MAIN</span>
+      <a *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="active" class="nav-link">
+        <div class="nav-icon-wrap"><span class="material-icons">{{item.icon}}</span></div>
+        <span class="link-text">{{item.label}}</span>
+      </a>
+      <span class="nav-section-label ai-label"><span class="material-icons ai-sparkle">auto_awesome</span> AI TOOLS</span>
+      <a *ngFor="let item of aiItems" [routerLink]="item.route" routerLinkActive="active" class="nav-link ai-nav">
+        <div class="nav-icon-wrap ai-icon-wrap"><span class="material-icons">{{item.icon}}</span></div>
+        <span class="link-text">{{item.label}}</span>
+      </a>
+      <span class="nav-section-label" *ngIf="currentUser?.role === 'ADMIN'">ADMIN</span>
+      <a *ngIf="currentUser?.role === 'ADMIN'" routerLink="/app/admin" routerLinkActive="active" class="nav-link">
+        <div class="nav-icon-wrap"><span class="material-icons">dashboard</span></div>
+        <span class="link-text">Dashboard</span>
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a routerLink="/app/profile" class="user-pill">
+        <div class="user-av">{{userInitials}}</div>
+        <div class="user-det"><strong>{{currentUser?.first_name || 'User'}}</strong><small>{{currentUser?.role || 'Member'}}</small></div>
+      </a>
+      <button class="logout-btn" (click)="logout()" title="Logout"><span class="material-icons">logout</span></button>
+    </div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1>{{getPageTitle()}}</h1>
+        <span class="topbar-breadcrumb">{{getBreadcrumb()}}</span>
+      </div>
+      <div class="topbar-right">
+        <div class="search-box">
+          <span class="material-icons">search</span>
+          <input type="text" placeholder="Search anything...">
+        </div>
+        <button class="icon-btn voice-btn" (click)="toggleVoice()" title="Voice Assistant">
+          <span class="material-icons">mic</span>
+        </button>
+        <button class="icon-btn notif-btn">
+          <span class="material-icons">notifications_none</span>
+          <span class="notif-dot"></span>
+        </button>
+      </div>
+    </header>
+    <div class="page-body">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>
+
+<!-- AI CHAT WIDGET -->
+<div class="chat-fab" (click)="showChat = !showChat" [class.open]="showChat">
+  <span class="material-icons">{{showChat ? 'close' : 'auto_awesome'}}</span>
+</div>
+<div class="chat-panel" *ngIf="showChat">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-ai-av"><span class="material-icons">auto_awesome</span></div>
+      <div><strong>AI Career Assistant</strong><span class="chat-status"><span class="status-dot"></span> Online</span></div>
+    </div>
+    <button class="chat-close" (click)="showChat = false"><span class="material-icons">close</span></button>
+  </div>
+  <div class="chat-body">
+    <div class="chat-msg" *ngFor="let m of chatMessages" [class]="m.role">
+      <div class="msg-bubble">{{m.text}}</div>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" [(ngModel)]="chatInput" (keyup.enter)="sendChat()" placeholder="Ask me anything...">
+    <button class="chat-send" (click)="sendChat()"><span class="material-icons">send</span></button>
+  </div>
+  <div class="chat-suggestions">
+    <button (click)="chatInput = 'Review my CV'; sendChat()">Review my CV</button>
+    <button (click)="chatInput = 'Find matching jobs'; sendChat()">Find jobs</button>
+    <button (click)="chatInput = 'Salary estimation'; sendChat()">Salary info</button>
+  </div>
+</div>
+
+<!-- VOICE ASSISTANT MODAL -->
+<div class="voice-modal" *ngIf="showVoice">
+  <div class="voice-overlay" (click)="showVoice = false"></div>
+  <div class="voice-panel">
+    <div class="voice-ring" [class.listening]="voiceListening">
+      <span class="material-icons">mic</span>
+    </div>
+    <h3 *ngIf="voiceListening">Listening...</h3>
+    <h3 *ngIf="!voiceListening && voiceText">I heard:</h3>
+    <p class="voice-result" *ngIf="voiceText">"{{voiceText}}"</p>
+    <div class="voice-actions" *ngIf="!voiceListening && voiceText">
+      <button class="voice-exec" (click)="executeVoice()"><span class="material-icons">search</span> Execute Search</button>
+      <button class="voice-retry" (click)="voiceListening = true; voiceText = ''"><span class="material-icons">refresh</span> Try Again</button>
+    </div>
+    <div class="voice-langs">
+      <span class="lang-badge active">English</span>
+      <span class="lang-badge">Fran&#231;ais</span>
+      <span class="lang-badge">&#1593;&#1585;&#1576;&#1610;</span>
+    </div>
+  </div>
+</div>

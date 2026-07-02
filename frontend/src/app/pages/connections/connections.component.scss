@@ -1,0 +1,93 @@
+.connections-page { max-width: 800px; margin: 0 auto; }
+
+.page-header {
+  margin-bottom: 24px;
+  h2 {
+    display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 800;
+    color: var(--navy-dark); margin-bottom: 16px;
+    .material-icons { font-size: 28px; color: var(--coral); }
+  }
+}
+
+.tab-bar {
+  display: flex; gap: 8px;
+  button {
+    display: flex; align-items: center; gap: 6px; padding: 10px 20px; border: 1.5px solid var(--border);
+    border-radius: 12px; background: white; color: var(--text-light); font-size: 13px; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: all .25s;
+    .material-icons { font-size: 18px; }
+    &:hover { border-color: var(--navy); color: var(--navy); }
+    &.active { background: var(--navy); color: white; border-color: var(--navy); }
+  }
+}
+
+.loading { text-align: center; padding: 40px; color: var(--text-light); font-size: 15px; }
+
+.empty-state {
+  text-align: center; padding: 60px 20px; background: white; border-radius: 16px; border: 1px solid var(--border);
+  .material-icons { font-size: 48px; color: var(--text-lighter); margin-bottom: 12px; }
+  h3 { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  p { font-size: 14px; color: var(--text-light); }
+}
+
+.connections-grid { display: flex; flex-direction: column; gap: 12px; }
+
+.connection-card {
+  display: flex; align-items: center; gap: 16px; padding: 18px 22px;
+  background: white; border-radius: 16px; border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,.04); transition: all .25s;
+  &:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); transform: translateY(-1px); }
+}
+
+.card-avatar {
+  width: 50px; height: 50px; border-radius: 14px; color: white; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700;
+}
+
+.card-info {
+  flex: 1; min-width: 0;
+  strong { display: block; font-size: 15px; color: var(--text); font-weight: 700; }
+  small { display: block; font-size: 13px; color: var(--text-light); margin-top: 2px; }
+  .connected-since { display: block; font-size: 11px; color: var(--text-lighter); margin-top: 4px; }
+}
+
+.card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.view-btn {
+  display: flex; align-items: center; gap: 5px; padding: 8px 16px;
+  border: 1.5px solid var(--navy); border-radius: 10px; background: transparent;
+  color: var(--navy); font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+  transition: all .25s;
+  .material-icons { font-size: 16px; }
+  &:hover { background: var(--navy); color: white; }
+}
+
+.remove-btn {
+  padding: 8px; border: 1.5px solid var(--border); border-radius: 10px; background: transparent;
+  color: var(--text-lighter); cursor: pointer; transition: all .25s;
+  .material-icons { font-size: 18px; }
+  &:hover { border-color: #E63946; color: #E63946; background: #FEF2F2; }
+}
+
+.accept-btn {
+  display: flex; align-items: center; gap: 5px; padding: 8px 16px;
+  border: none; border-radius: 10px; background: #059669; color: white;
+  font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+  transition: all .25s;
+  .material-icons { font-size: 16px; }
+  &:hover { background: #047857; }
+}
+
+.reject-btn {
+  display: flex; align-items: center; gap: 5px; padding: 8px 16px;
+  border: 1.5px solid var(--border); border-radius: 10px; background: transparent;
+  color: var(--text-light); font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+  transition: all .25s;
+  .material-icons { font-size: 16px; }
+  &:hover { border-color: #E63946; color: #E63946; }
+}
+
+@media (max-width: 600px) {
+  .connection-card { flex-wrap: wrap; }
+  .card-actions { width: 100%; justify-content: flex-end; }
+}

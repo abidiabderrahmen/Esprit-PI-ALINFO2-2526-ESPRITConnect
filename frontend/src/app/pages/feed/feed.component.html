@@ -1,0 +1,129 @@
+<div class="loading-spinner" *ngIf="isLoading" style="display:flex;justify-content:center;align-items:center;height:50vh"><p style="color:var(--text-light);font-size:16px">Loading feed...</p></div>
+<div class="feed-layout" *ngIf="!isLoading">
+  <!-- LEFT SIDEBAR -->
+  <div class="feed-sidebar">
+    <div class="profile-card">
+      <div class="profile-banner"></div>
+      <div class="profile-info">
+        <div class="profile-avatar">{{userInitials}}</div>
+        <h3>{{userName}}</h3>
+        <p>{{userRole}}</p>
+        <div class="profile-stats">
+          <div class="profile-stat"><strong>{{connectionCount}}</strong><span>Connections</span></div>
+          <div class="profile-stat"><strong>{{posts.length}}</strong><span>Posts</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="quick-links">
+      <h4>Quick Links</h4>
+      <div class="quick-link"><span class="material-icons">bookmark</span> Saved Posts</div>
+      <div class="quick-link"><span class="material-icons">group</span> My Groups</div>
+      <div class="quick-link"><span class="material-icons">event</span> Events</div>
+      <div class="quick-link"><span class="material-icons">work</span> Job Board</div>
+    </div>
+  </div>
+
+  <!-- MAIN FEED -->
+  <div class="feed-main">
+    <!-- Create Post -->
+    <div class="create-post-card">
+      <div class="create-post-header">
+        <div class="create-avatar">{{userInitials}}</div>
+        <div class="create-input" (click)="showCreateModal = true">Share something with the community...</div>
+      </div>
+      <div class="create-post-actions">
+        <button class="action-btn" (click)="showCreateModal = true"><span class="material-icons" style="color:#4338CA">article</span> Article</button>
+        <button class="action-btn" (click)="showCreateModal = true"><span class="material-icons" style="color:#059669">emoji_events</span> Achievement</button>
+        <button class="action-btn" (click)="showCreateModal = true"><span class="material-icons" style="color:#EA580C">help_outline</span> Question</button>
+      </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="post-card" *ngFor="let post of posts">
+      <div class="post-header">
+        <div class="post-avatar" [style.background]="post.color">{{post.initials}}</div>
+        <div class="post-meta">
+          <strong>{{post.author}}</strong>
+          <span>{{post.role}} &middot; {{post.time}}</span>
+        </div>
+        <span class="post-type-badge" [ngClass]="'badge-' + post.type">{{post.type}}</span>
+      </div>
+      <div class="post-content"><p>{{post.content}}</p></div>
+      <div class="post-stats">
+        <span><strong>{{post.likes}}</strong> likes</span>
+        <span><strong>{{post.comments.length}}</strong> comments</span>
+      </div>
+      <div class="post-actions">
+        <button [class.liked]="likedPosts[post.id]" (click)="toggleLike(post.id)"><span class="material-icons">{{likedPosts[post.id] ? 'favorite' : 'favorite_border'}}</span> Like</button>
+        <button (click)="toggleComments(post.id)"><span class="material-icons">chat_bubble_outline</span> Comment</button>
+        <button><span class="material-icons">share</span> Share</button>
+      </div>
+      <div class="post-comments" *ngIf="showComments[post.id]">
+        <div class="comment" *ngFor="let c of post.comments">
+          <div class="comment-avatar" [style.background]="c.color">{{c.initials}}</div>
+          <div class="comment-body"><strong>{{c.author}}</strong><p>{{c.text}}</p></div>
+        </div>
+        <div class="comment-input">
+          <div class="comment-avatar-small">{{userInitials}}</div>
+          <input type="text" [(ngModel)]="newComment[post.id]" placeholder="Write a comment..." (keyup.enter)="addComment(post.id)">
+          <button class="send-comment-btn" (click)="addComment(post.id)" style="background:none;border:none;cursor:pointer"><span class="material-icons" style="color:var(--coral)">send</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="feed-right">
+    <div class="trending-card">
+      <h4><span class="material-icons">trending_up</span> Trending Topics</h4>
+      <div class="trending-item" *ngFor="let t of trendingTopics">
+        <span class="trending-hash">#</span>
+        <div><strong>{{t.name}}</strong><small>{{t.posts}}</small></div>
+      </div>
+    </div>
+    <div class="pending-card" *ngIf="pendingRequests.length > 0">
+      <h4><span class="material-icons">notifications_active</span> Pending Requests ({{pendingRequests.length}})</h4>
+      <div class="suggested-person" *ngFor="let req of pendingRequests">
+        <div class="person-avatar" style="background:#7C3AED">{{req.sender?.first_name?.[0] || 'U'}}{{req.sender?.last_name?.[0] || ''}}</div>
+        <div class="person-info"><strong>{{req.sender?.first_name}} {{req.sender?.last_name}}</strong><small>wants to connect</small></div>
+        <div style="display:flex;gap:4px">
+          <button class="connect-btn" style="background:#059669" (click)="acceptPending(req)">Accept</button>
+          <button class="connect-btn" style="background:#E63946" (click)="rejectPending(req)">Reject</button>
+        </div>
+      </div>
+    </div>
+    <div class="suggested-card">
+      <h4><span class="material-icons">person_add</span> Suggested Connections</h4>
+      <div *ngIf="suggestedPeople.length === 0" style="padding:12px;color:var(--text-light);font-size:13px;text-align:center">No suggestions yet</div>
+      <div class="suggested-person" *ngFor="let p of suggestedPeople">
+        <div class="person-avatar" [style.background]="p.color" style="cursor:pointer" (click)="viewProfile(p.id)">{{p.initials}}</div>
+        <div class="person-info" style="cursor:pointer" (click)="viewProfile(p.id)"><strong>{{p.name}}</strong><small>{{p.role}}</small></div>
+        <button class="connect-btn" *ngIf="p.connectionStatus === 'none'" (click)="sendConnection(p)">Connect</button>
+        <button class="connect-btn" *ngIf="p.connectionStatus === 'pending'" disabled style="opacity:0.6;cursor:default">Pending</button>
+        <button class="connect-btn" *ngIf="p.connectionStatus === 'accepted'" disabled style="background:#059669;cursor:default">Connected</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Post Modal -->
+<div class="create-post-modal" *ngIf="showCreateModal">
+  <div class="modal-overlay" (click)="showCreateModal = false"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Create Post</h3>
+      <button (click)="showCreateModal = false"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="post-type-selector">
+        <button *ngFor="let pt of postTypes" [class.active]="newPostType === pt.value" (click)="newPostType = pt.value">
+          <span class="material-icons">{{pt.icon}}</span> {{pt.label}}
+        </button>
+      </div>
+      <textarea rows="5" [(ngModel)]="newPostContent" placeholder="What's on your mind?"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="post-btn" (click)="createPost()"><span class="material-icons">send</span> Post</button>
+    </div>
+  </div>
+</div>

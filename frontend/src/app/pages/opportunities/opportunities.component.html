@@ -1,0 +1,105 @@
+<div class="loading-spinner" *ngIf="isLoading" style="display:flex;justify-content:center;align-items:center;height:50vh"><p style="color:var(--text-light);font-size:16px">Loading opportunities...</p></div>
+<ng-container *ngIf="!isLoading">
+<div class="page-header">
+  <div>
+    <h2>Opportunities</h2>
+    <p>Discover jobs, internships, and freelance projects</p>
+  </div>
+  <button class="create-btn" (click)="showCreateModal = true"><span class="material-icons">add</span> Post Opportunity</button>
+</div>
+
+<div class="filters-row">
+  <div class="search-box">
+    <span class="material-icons">search</span>
+    <input type="text" [(ngModel)]="searchQuery" placeholder="Search by title, company...">
+  </div>
+  <div class="filter-chips">
+    <button class="chip" *ngFor="let t of types" [class.active]="selectedType === t.value" (click)="selectedType = t.value">
+      <span class="material-icons">{{t.icon}}</span> {{t.label}}
+    </button>
+  </div>
+</div>
+
+<div class="opportunities-grid">
+  <div class="opportunity-card" *ngFor="let opp of filteredOpportunities">
+    <div class="opp-card-top">
+      <div class="opp-type-icon" [style.background]="opp.iconBg"><span class="material-icons" [style.color]="opp.iconColor">work</span></div>
+      <div class="opp-badges">
+        <span class="ai-match-badge" *ngIf="opp.aiMatch"><span class="material-icons">auto_awesome</span> {{opp.aiMatch}}%</span>
+        <span class="type-badge" [style.background]="opp.typeColor" [style.color]="opp.typeTextColor">{{opp.type}}</span>
+        <span class="remote-badge" *ngIf="opp.remote"><span class="material-icons">wifi</span> Remote</span>
+      </div>
+    </div>
+    <h3>{{opp.title}}</h3>
+    <p class="opp-company"><span class="material-icons">business</span> {{opp.company}}</p>
+    <div class="opp-details">
+      <span><span class="material-icons">location_on</span> {{opp.location}}</span>
+      <span><span class="material-icons">payments</span> {{opp.salary}}</span>
+    </div>
+    <p class="opp-description">{{opp.description}}</p>
+    <div class="opp-footer">
+      <span class="deadline"><span class="material-icons">schedule</span> Deadline: {{opp.deadline}}</span>
+      <button class="apply-btn" (click)="openApply(opp)">Apply Now</button>
+    </div>
+  </div>
+</div>
+</ng-container>
+
+<!-- Create Opportunity Modal -->
+<div class="modal-overlay" *ngIf="showCreateModal" (click)="showCreateModal = false">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Post Opportunity</h3>
+      <button (click)="showCreateModal = false"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Title *</label><input [(ngModel)]="newOpp.title" placeholder="e.g. Full Stack Developer"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Type</label>
+          <select [(ngModel)]="newOpp.opportunity_type">
+            <option value="JOB">Job</option>
+            <option value="INTERNSHIP">Internship</option>
+            <option value="FREELANCE">Freelance</option>
+            <option value="PROJECT">Project</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Company</label><input [(ngModel)]="newOpp.company_name" placeholder="Company name"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Location</label><input [(ngModel)]="newOpp.location" placeholder="e.g. Tunis, Remote"></div>
+        <div class="form-group"><label>Salary Range</label><input [(ngModel)]="newOpp.salary_range" placeholder="e.g. 3,000-5,000 TND"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea rows="4" [(ngModel)]="newOpp.description" placeholder="Describe the opportunity..."></textarea></div>
+      <div class="form-group"><label>Requirements</label><textarea rows="3" [(ngModel)]="newOpp.requirements" placeholder="Required skills and qualifications..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Deadline</label><input type="date" [(ngModel)]="newOpp.deadline"></div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;padding-top:22px">
+          <input type="checkbox" [(ngModel)]="newOpp.is_remote" id="remoteChk">
+          <label for="remoteChk" style="margin:0">Remote position</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="showCreateModal = false">Cancel</button>
+      <button class="submit-btn" (click)="createOpportunity()"><span class="material-icons">send</span> Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Apply Modal -->
+<div class="modal-overlay" *ngIf="showApplyModal" (click)="showApplyModal = false">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Apply for {{selectedOpp?.title}}</h3>
+      <button (click)="showApplyModal = false"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text-light);margin-bottom:16px">at <strong>{{selectedOpp?.company}}</strong></p>
+      <div class="form-group"><label>Cover Letter *</label><textarea rows="8" [(ngModel)]="coverLetter" placeholder="Tell them why you're a great fit..."></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" (click)="showApplyModal = false">Cancel</button>
+      <button class="submit-btn" (click)="submitApplication()"><span class="material-icons">send</span> Submit Application</button>
+    </div>
+  </div>
+</div>

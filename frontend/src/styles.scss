@@ -1,0 +1,96 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$esprit-primary: mat.define-palette(mat.$indigo-palette, 900, 500, 100);
+$esprit-accent: mat.define-palette(mat.$deep-orange-palette, 600, 400, 200);
+$esprit-theme: mat.define-light-theme((
+  color: (primary: $esprit-primary, accent: $esprit-accent)
+));
+@include mat.all-component-themes($esprit-theme);
+
+:root {
+  --navy: #1B2A4A;
+  --navy-dark: #0F1D36;
+  --navy-light: #2D4066;
+  --coral: #E63946;
+  --coral-light: #FF6B6B;
+  --coral-dark: #CF2D3A;
+  --gold: #F4A261;
+  --teal: #2EC4B6;
+  --purple: #7C3AED;
+  --bg: #F5F7FA;
+  --bg-alt: #EDF0F7;
+  --card: #FFFFFF;
+  --text: #1A1A2E;
+  --text-light: #5A6478;
+  --text-lighter: #94A3B8;
+  --border: #E2E8F0;
+  --border-light: #F1F5F9;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+  --shadow-glow: 0 0 30px rgba(230,57,70,0.15);
+  --transition: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; &:hover { background: #94A3B8; } }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

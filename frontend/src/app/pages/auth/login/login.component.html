@@ -1,0 +1,62 @@
+<div class="auth-wrapper">
+  <div class="auth-left">
+    <div class="auth-left-bg">
+      <div class="left-orb orb-1"></div>
+      <div class="left-orb orb-2"></div>
+    </div>
+    <div class="auth-left-inner">
+      <img src="assets/esprit-logo-white.svg" alt="ESPRIT" class="auth-logo">
+      <h1>Welcome Back</h1>
+      <p>Sign in to your ESPRIT CONNECT account and continue building your professional network.</p>
+      <div class="features-list">
+        <div class="fl-item"><div class="fl-icon"><span class="material-icons">check_circle</span></div> Access exclusive job opportunities</div>
+        <div class="fl-item"><div class="fl-icon"><span class="material-icons">check_circle</span></div> Connect with 2,500+ alumni</div>
+        <div class="fl-item"><div class="fl-icon"><span class="material-icons">check_circle</span></div> Join industry events &amp; workshops</div>
+      </div>
+      <div class="auth-stats">
+        <div class="as"><strong>2.5K+</strong><span>Members</span></div>
+        <div class="as-div"></div>
+        <div class="as"><strong>150+</strong><span>Companies</span></div>
+        <div class="as-div"></div>
+        <div class="as"><strong>95%</strong><span>Hired</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="form-wrapper">
+      <div class="form-box">
+        <div class="form-header">
+          <h2>Sign In</h2>
+          <p>Enter your credentials to continue</p>
+        </div>
+        <form (ngSubmit)="onLogin()">
+          <div class="field">
+            <label>Username</label>
+            <div class="input-box">
+              <span class="material-icons">person_outline</span>
+              <input type="text" [(ngModel)]="credentials.username" name="username" placeholder="Your username" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-box">
+              <span class="material-icons">lock_outline</span>
+              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="credentials.password" name="password" placeholder="Your password" required>
+              <span class="material-icons toggle" (click)="showPassword = !showPassword">{{showPassword ? 'visibility_off' : 'visibility'}}</span>
+            </div>
+          </div>
+          <div class="remember-row">
+            <label class="check-label"><input type="checkbox"> Remember me</label>
+            <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+          </div>
+          <button type="submit" class="submit-btn" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Sign In</span>
+            <span *ngIf="isLoading" class="loading-dots">Signing in...</span>
+            <span class="material-icons" *ngIf="!isLoading">arrow_forward</span>
+          </button>
+        </form>
+        <p class="switch-text">Don't have an account? <a routerLink="/register">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</div>

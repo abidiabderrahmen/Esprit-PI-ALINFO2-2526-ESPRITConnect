@@ -1,0 +1,111 @@
+<div class="cv-header">
+  <div><div class="ai-badge"><span class="material-icons">auto_awesome</span> AI-Powered</div>
+    <h1>CV Reviewer</h1>
+    <p>Upload your CV and get instant AI-powered feedback, ATS scoring, and improvement suggestions.</p>
+  </div>
+</div>
+
+<!-- Upload Area -->
+<div class="upload-card" *ngIf="!isAnalyzed && !isAnalyzing">
+  <div class="upload-zone" (click)="fileInput.click()">
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".pdf,.docx,.txt" hidden>
+    <span class="material-icons upload-icon">cloud_upload</span>
+    <h3>Drop your CV here or click to upload</h3>
+    <p>Supports PDF, DOCX, TXT (Max 5MB)</p>
+    <button class="upload-btn"><span class="material-icons">upload_file</span> Select File</button>
+  </div>
+  <p class="upload-error" *ngIf="errorMessage">
+    <span class="material-icons">error_outline</span> {{errorMessage}}
+  </p>
+</div>
+
+<!-- Analyzing Animation -->
+<div class="analyzing-card" *ngIf="isAnalyzing">
+  <div class="analyzing-anim">
+    <div class="pulse-ring"></div>
+    <span class="material-icons analyzing-icon">auto_awesome</span>
+  </div>
+  <h3>Analyzing your CV...</h3>
+  <p>Our AI is reviewing {{fileName}} for ATS compatibility, content quality, and keyword optimization.</p>
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+
+<!-- Results -->
+<div *ngIf="isAnalyzed">
+  <!-- Re-upload button -->
+  <div class="result-actions">
+    <button class="reupload-btn" (click)="resetUpload()">
+      <span class="material-icons">upload_file</span> Analyze Another CV
+    </button>
+    <span class="file-tag"><span class="material-icons">description</span> {{fileName}}</span>
+  </div>
+
+  <!-- Overall Score -->
+  <div class="result-top">
+    <div class="overall-score">
+      <div class="big-ring">
+        <svg viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+          <circle cx="80" cy="80" r="70" fill="none" [attr.stroke]="getScoreColor(overallScore)" stroke-width="10"
+            stroke-linecap="round" stroke-dasharray="440" [attr.stroke-dashoffset]="440 - (440 * overallScore / 100)"
+            transform="rotate(-90 80 80)" style="transition: stroke-dashoffset 1.5s"/>
+        </svg>
+        <div class="big-ring-val"><strong>{{overallScore}}</strong><span>Overall Score</span></div>
+      </div>
+    </div>
+    <div class="score-cards">
+      <div class="sc" *ngFor="let s of scores">
+        <div class="sc-top">
+          <div class="sc-icon" [style.background]="s.color + '15'"><span class="material-icons" [style.color]="s.color">{{s.icon}}</span></div>
+          <strong [style.color]="getScoreColor(s.score)">{{s.score}}%</strong>
+        </div>
+        <span class="sc-label">{{s.label}}</span>
+        <div class="sc-bar"><div class="sc-fill" [style.width.%]="s.score" [style.background]="s.color"></div></div>
+        <p class="sc-tip" *ngIf="s.tip"><span class="material-icons">lightbulb</span> {{s.tip}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Improvements -->
+  <div class="card improvements-card" *ngIf="improvements.length">
+    <div class="card-title"><span class="material-icons">build</span> AI Improvement Suggestions</div>
+    <div class="imp-list">
+      <div class="imp-item" *ngFor="let imp of improvements">
+        <div class="imp-icon" [style.color]="getTypeColor(imp.type)"><span class="material-icons">{{imp.icon}}</span></div>
+        <div class="imp-content">
+          <span class="imp-section" [style.color]="getTypeColor(imp.type)">{{imp.section}}</span>
+          <p>{{imp.text}}</p>
+        </div>
+        <span class="imp-type" [style.background]="getTypeColor(imp.type)">{{imp.type}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Grid -->
+  <div class="bottom-grid">
+    <!-- Matching Jobs -->
+    <div class="card" *ngIf="matchingJobs.length">
+      <div class="card-title"><span class="material-icons">work</span> Matching Jobs ({{matchingJobs.length}})</div>
+      <div class="job-match-list">
+        <div class="jm-item" *ngFor="let j of matchingJobs">
+          <div class="jm-info"><strong>{{j.title}}</strong><span>{{j.company}}</span></div>
+          <div class="jm-match" [style.color]="getScoreColor(j.match)">{{j.match}}%</div>
+          <div class="jm-missing" *ngIf="j.missing?.length"><span class="miss-tag" *ngFor="let m of j.missing">+{{m}}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cert Recommendations -->
+    <div class="card" *ngIf="certRecommendations.length">
+      <div class="card-title"><span class="material-icons">verified</span> Recommended Certifications</div>
+      <div class="cert-list">
+        <div class="cert-item" *ngFor="let c of certRecommendations">
+          <div class="cert-info"><strong>{{c.name}}</strong>
+            <div class="cert-meta"><span>{{c.difficulty}}</span><span>{{c.time}}</span></div>
+          </div>
+          <span class="cert-impact">{{c.impact}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

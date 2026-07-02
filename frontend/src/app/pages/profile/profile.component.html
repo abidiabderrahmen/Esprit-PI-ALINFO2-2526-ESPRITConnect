@@ -1,0 +1,109 @@
+<div class="profile-page">
+  <!-- Header -->
+  <div class="profile-header">
+    <div class="header-banner"></div>
+    <div class="header-content">
+      <div class="header-avatar">{{profile.initials}}</div>
+      <div class="header-info">
+        <h1>{{profile.first_name}} {{profile.last_name}}</h1>
+        <p class="header-position" *ngIf="profile.position || profile.company">
+          {{profile.position}}<span *ngIf="profile.position && profile.company"> at </span>{{profile.company}}
+        </p>
+        <p class="header-position" *ngIf="!profile.position && !profile.company && profile.role">{{profile.role}}</p>
+        <div class="header-meta">
+          <span *ngIf="profile.location"><span class="material-icons">location_on</span> {{profile.location}}</span>
+          <span *ngIf="profile.graduation_year"><span class="material-icons">school</span> Class of {{profile.graduation_year}}</span>
+          <span *ngIf="profile.role"><span class="material-icons">badge</span> {{profile.role}}</span>
+          <span><span class="material-icons">group</span> {{stats.connections}} connections</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="edit-btn" (click)="isEditing = !isEditing">
+          <span class="material-icons">{{isEditing ? 'close' : 'edit'}}</span>
+          {{isEditing ? 'Cancel' : 'Edit Profile'}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-body">
+    <!-- Main Content -->
+    <div class="profile-main">
+      <!-- Edit Form -->
+      <div class="profile-section" *ngIf="isEditing">
+        <h3><span class="material-icons">edit</span> Edit Profile</h3>
+        <div class="edit-form">
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input [(ngModel)]="profile.first_name"></div>
+            <div class="form-group"><label>Last Name</label><input [(ngModel)]="profile.last_name"></div>
+          </div>
+          <div class="form-group"><label>Position</label><input [(ngModel)]="profile.position" placeholder="e.g. Full Stack Developer"></div>
+          <div class="form-group"><label>Company</label><input [(ngModel)]="profile.company" placeholder="e.g. ESPRIT"></div>
+          <div class="form-group"><label>Location</label><input [(ngModel)]="profile.location" placeholder="e.g. Tunis, Tunisia"></div>
+          <div class="form-group"><label>Bio</label><textarea rows="4" [(ngModel)]="profile.bio" placeholder="Tell us about yourself..."></textarea></div>
+          <div class="form-group"><label>Skills (comma separated)</label><input [(ngModel)]="skillsInput" placeholder="e.g. Angular, Python, Docker" (blur)="profile.skills = splitSkills(skillsInput)"></div>
+          <div class="form-row">
+            <div class="form-group"><label>LinkedIn URL</label><input [(ngModel)]="profile.linkedin" placeholder="https://linkedin.com/in/..."></div>
+            <div class="form-group"><label>GitHub URL</label><input [(ngModel)]="profile.github" placeholder="https://github.com/..."></div>
+          </div>
+          <div class="form-group"><label>Phone</label><input [(ngModel)]="profile.phone" placeholder="+216 ..."></div>
+          <button class="save-btn" (click)="saveProfile()" [disabled]="isSaving">
+            <span class="material-icons">{{isSaving ? 'hourglass_top' : 'check'}}</span>
+            {{isSaving ? 'Saving...' : 'Save Changes'}}
+          </button>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="profile-section" *ngIf="!isEditing">
+        <h3><span class="material-icons">person</span> About</h3>
+        <p class="about-text" *ngIf="profile.bio">{{profile.bio}}</p>
+        <p class="empty-hint" *ngIf="!profile.bio">No bio yet. Click "Edit Profile" to add one.</p>
+      </div>
+
+      <!-- Skills -->
+      <div class="profile-section" *ngIf="!isEditing">
+        <h3><span class="material-icons">code</span> Skills</h3>
+        <div class="skills-list" *ngIf="profile.skills.length > 0">
+          <span class="skill-chip" *ngFor="let s of profile.skills">{{s}}</span>
+        </div>
+        <p class="empty-hint" *ngIf="!profile.skills.length">No skills added yet. Click "Edit Profile" to add your skills.</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="profile-section stats-section" *ngIf="!isEditing">
+        <h3><span class="material-icons">insights</span> Activity Overview</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="material-icons" style="color:#4338CA">group</span>
+            <strong>{{stats.connections}}</strong>
+            <small>Connections</small>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons" style="color:#059669">article</span>
+            <strong>{{stats.posts}}</strong>
+            <small>Posts</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="profile-sidebar">
+      <div class="sidebar-card">
+        <h4><span class="material-icons" style="font-size:18px;color:var(--navy);vertical-align:middle;margin-right:6px">contact_mail</span>Contact</h4>
+        <div class="contact-item" *ngIf="profile.email"><span class="material-icons">email</span> {{profile.email}}</div>
+        <div class="contact-item" *ngIf="profile.phone"><span class="material-icons">phone</span> {{profile.phone}}</div>
+        <div class="contact-item link" *ngIf="profile.linkedin"><span class="material-icons">link</span> <a [href]="profile.linkedin" target="_blank">LinkedIn</a></div>
+        <div class="contact-item link" *ngIf="profile.github"><span class="material-icons">code</span> <a [href]="profile.github" target="_blank">GitHub</a></div>
+        <p class="empty-hint" *ngIf="!profile.email && !profile.phone && !profile.linkedin && !profile.github" style="padding:8px 0">No contact info added yet.</p>
+      </div>
+      <div class="sidebar-card" *ngIf="profile.role || profile.graduation_year || profile.is_mentor">
+        <h4><span class="material-icons" style="font-size:18px;color:var(--navy);vertical-align:middle;margin-right:6px">info</span>Details</h4>
+        <div class="detail-row" *ngIf="profile.role"><span class="material-icons">badge</span> {{profile.role}}</div>
+        <div class="detail-row" *ngIf="profile.graduation_year"><span class="material-icons">school</span> Class of {{profile.graduation_year}}</div>
+        <div class="detail-row" *ngIf="profile.is_mentor"><span class="material-icons" style="color:#059669">workspace_premium</span> Available as Mentor</div>
+      </div>
+    </div>
+  </div>
+</div>
